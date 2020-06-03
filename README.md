@@ -4,9 +4,10 @@ This project uses <a href="https://pysd.readthedocs.io/en/master/">PySD</a> and 
 # Dependencies
 This project uses a couple of external resources in order to contruct the interactive dashboard:
 
-PySD version 0.10.0 (<a href="https://pysd.readthedocs.io/en/master/">Can be found here</a>)
-Dash version 1.12.0 (<a href="https://dash.plotly.com/">Can be found here</a>)
-Python version 3.7.7
+PySD version 0.10.0 (<a href="https://pysd.readthedocs.io/en/master/">Can be found here</a>) <br>
+Dash version 1.12.0 (<a href="https://dash.plotly.com/">Can be found here</a>) <br>
+Python version 3.7.7 <br>
+Dash stylesheet made by Chris P (<a href="https://codepen.io/chriddyp/pen/dZVMbK">Can be found here</a>) <br>
 
 # Usage
 A live version of the interactive dashboard (<a href="https://dash.plotly.com/">can be found here</a>). This version simulates the SD model in real time, making it possible for the user to select any combination of input variables. 
