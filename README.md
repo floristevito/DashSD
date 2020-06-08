@@ -13,7 +13,7 @@ Python version 3.7.7 <br>
 A live version of the interactive dashboard <a href="https://dash.plotly.com/">can be found here</a>. This version simulates the SD model in real time, making it possible for the user to select any combination of input variables. 
 
 # Source
-All source code is include in this repository in the folder named “source”. This folder includes both a standard Python file (.py) of the code ass well as a python Jupyter Notebook file (.ipynb). The latest version of the constructed SD model and a copy of the thesis is included in this folder as well. 
+Additional sources are include in this repository in the folder named “AdditionalSources”. This folder includes both a standard Python file (.py) of the code ass well as a python Jupyter Notebook file (.ipynb). The latest version of the constructed SD model and a copy of the thesis is included in this folder as well. 
 
 # Further research
 This interactive dashboard can be modified to be used for any further research. In order to do so, download the included source files from this repository and install the dependencies as listed above. 

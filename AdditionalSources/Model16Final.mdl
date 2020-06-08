@@ -1,0 +1,920 @@
+{UTF-8}
+Agricultural production shortage=
+	MAX( 0 , Agricultural food demand-Agricultural production )
+	~	kg/year
+	~		|
+
+Agricultural water shortage with import=
+	MAX(0, (Agricultural production shortage-Agricultural import)/Average agricultural production per irrigated land\
+		*Water demand per irrigated area)
+	~	(m*m*m)/year
+	~		|
+
+Change Nile flow Egypt dry climate=
+	-0.6
+	~	Dmnl
+	~		|
+
+Change Nile flow Egypt wet climate=
+	0.45
+	~	Dmnl
+	~		|
+
+Annual Nile waterflow to Egypt=
+	Normal annual Nile flow to Egypt* (1 + ("External switch 1: dry climate"*Change Nile flow Egypt dry climate\
+		)+("External switch 2: wet climate"*Change Nile flow Egypt wet climate))
+	~	m*m*m/year
+	~		|
+
+Normal annual Nile flow to Egypt=
+	5.55e+10
+	~	m*m*m/year
+	~		|
+
+"External switch 2: wet climate"=
+	0
+	~	Dmnl
+	~		|
+
+Agricultural import=
+	Agricultural food demand*IF THEN ELSE("External switch 3: low international food prices"\
+		=0 :AND: "External switch 4: high international food prices"=0 , Normal import rate Egypt\
+		 , 
+	
+	(("External switch 3: low international food prices"*Effect low prices on import rate\
+		)+("External switch 4: high international food prices"*Effect high prices on import rate\
+		)))
+	~	kg/year
+	~		|
+
+Effect low prices on import rate=
+	0.59
+	~	Dmnl
+	~		|
+
+"External switch 1: dry climate"=
+	0
+	~	Dmnl
+	~		|
+
+"External switch 4: high international food prices"=
+	0
+	~	Dmnl
+	~		|
+
+Normal import rate Egypt=
+	0.57
+	~	Dmnl
+	~		|
+
+Effect high prices on import rate=
+	0.15
+	~	Dmnl
+	~		|
+
+"External switch 3: low international food prices"=
+	0
+	~	Dmnl
+	~		|
+
+Effective irrigated land=
+	MIN(Water allocated agriculture/Water demand per irrigated area, Potential irrigated land\
+		)
+	~	km*km
+	~		|
+
+Percentage of new land surface irrigated=
+	0
+	~	Dmnl
+	~		|
+
+Percentage of decreased land localized irrigated=
+	0
+	~	Dmnl
+	~		|
+
+Percentage of decreased land sprinkler irrigated=
+	0
+	~	Dmnl
+	~		|
+
+Percentage of decreased land surface irrigated=
+	100
+	~	Dmnl
+	~		|
+
+Percentage of new land localized irrigated=
+	50
+	~	Dmnl
+	~		|
+
+Percentage of new land sprinkler irrigated=
+	50
+	~	Dmnl
+	~		|
+
+Sum percentage new land=
+	Percentage of new land localized irrigated+Percentage of new land sprinkler irrigated\
+		+Percentage of new land surface irrigated
+	~	Dmnl
+	~		|
+
+Change in area surface irrigated=
+	-Increase potential irrigated land*(Percentage of new land surface irrigated/100)+Decrease potential irrigated land\
+		*(Percentage of decreased land surface irrigated/100)
+	~	(km*km)/year
+	~		|
+
+Sum percentage decreased land=
+	Percentage of decreased land localized irrigated+Percentage of decreased land sprinkler irrigated\
+		+Percentage of decreased land surface irrigated
+	~	Dmnl
+	~		|
+
+Change in area sprinkler irrigated=
+	-Increase potential irrigated land*(Percentage of new land sprinkler irrigated/100)+\
+		Decrease potential irrigated land*(Percentage of decreased land sprinkler irrigated\
+		/100)
+	~	(km*km)/year
+	~		|
+
+Change in area localized irrigated=
+	-Increase potential irrigated land*(Percentage of new land localized irrigated/100)+\
+		Decrease potential irrigated land*(Percentage of decreased land localized irrigated\
+		/100)
+	~	(km*km)/year
+	~		|
+
+New water demand per irrigated area=
+	Rel surface irrigated*Efficiency surface+Rel sprinkler irrigated*Efficiency sprinkler\
+		+Rel localized irrigated*Efficiency localized
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+Minimum water demand per irrigated area=
+	Irrigated water loss/Effective irrigated land
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+"Policy switch 1: water demand reduction"=
+	0
+	~	Dmnl
+	~		|
+
+Additional annual non renewable water resources=
+	5.8*10^9
+	~	m*m*m/year
+	~		|
+
+Additional annual water resources=
+	Annual external renewable groundwater+
+	Annual internal renewable ground and surface water+
+	Desalinated water produced+
+	Direct use of agricultural drainage+
+	Treated municipal wastewater+
+	Additional annual non renewable water resources
+	~	m*m*m/year
+	~		|
+
+Decrease potential irrigated land=
+	IF THEN ELSE(Potential irrigated land > Effective irrigated land, Maximum annual irrigated land decrease\
+		 , 0 )
+	~	km*km/year
+	~		|
+
+Inital percentage sprinkler= INITIAL(
+	0.115)
+	~	Dmnl
+	~		|
+
+Inital percentage surface= INITIAL(
+	0.77)
+	~	Dmnl
+	~		|
+
+Agricultural production=
+	Effective irrigated land * Average agricultural production per irrigated land
+	~	kg/year
+	~		|
+
+Direct use rate=
+	11.9*10^9/(11.9*10^9+1800*10^6)
+	~	Dmnl
+	~		|
+
+Rel surface irrigated=
+	Potential irrigated land surface irrigated/Sum potential
+	~	Dmnl
+	~		|
+
+Initial percentage localized= INITIAL(
+	0.115)
+	~	Dmnl
+	~		|
+
+Annual internal renewable ground and surface water=
+	Recovered irrigation water*(1-Direct use rate)
+	~	m*m*m/year
+	~		|
+
+Irrigated water loss=
+	Evapotranspiration+Water consumption from agricultural production
+	~	m*m*m/year
+	~		|
+
+Efficiency score sprinkler=
+	100 - 75
+	~	Dmnl
+	~		|
+
+Efficiency score surface=
+	100 - 70
+	~	Dmnl
+	~		|
+
+Efficiency sprinkler=
+	Efficiency score sprinkler/Sum efficiency*Ini water demand per irrigated area
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+Direct use of agricultural drainage=
+	Recovered irrigation water*Direct use rate
+	~	m*m*m/year
+	~		|
+
+Increase potential irrigated land=
+	IF THEN ELSE(Agricultural production shortage > 0 :AND: Potential irrigated land = Effective irrigated land\
+		, Maximum annual irrigated land growth
+	 ,0)
+	~	km*km/year
+	~		|
+
+Average water consumption per kg agricultural production=
+	0.126
+	~	m*m*m/kg
+	~		|
+
+Water demand reduction=
+	IF THEN ELSE(:NOT: New water demand per irrigated area = Water demand per irrigated area\
+		 :AND: Water demand per irrigated area
+	 > Minimum water demand per irrigated area :AND: "Policy switch 1: water demand reduction"\
+		=1,
+	(Water demand per irrigated area-New water demand per irrigated area)/TIME STEP , 
+	0 )
+	~	m*m*m/(year*year*km*km)
+	~		|
+
+Potential irrigated land localized irrigated= INTEG (
+	-Change in area localized irrigated,
+		Initial area localized irrigation)
+	~	km*km
+	~		|
+
+Potential irrigated land sprinkler irrigated= INTEG (
+	-Change in area sprinkler irrigated,
+		Initial area sprinkler irrigation)
+	~	km*km
+	~		|
+
+Recovered irrigation water=
+	MAX(0,Water use for irrigation-Irrigated water loss)
+	~	m*m*m/year
+	~		|
+
+Rel localized irrigated=
+	Potential irrigated land localized irrigated/Sum potential
+	~	Dmnl
+	~		|
+
+Rel sprinkler irrigated=
+	Potential irrigated land sprinkler irrigated/Sum potential
+	~	Dmnl
+	~		|
+
+Percentage recovered=
+	Recovered irrigation water/Water use for irrigation *100
+	~	Dmnl
+	~		|
+
+Efficiency localized=
+	Efficiency score localized/Sum efficiency * Ini water demand per irrigated area
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+Efficiency score localized=
+	100 - 85
+	~	Dmnl
+	~		|
+
+Water use for irrigation=
+	Effective irrigated land*Water demand per irrigated area
+	~	m*m*m/year
+	~		|
+
+Water consumption from agricultural production=
+	Agricultural production*Average water consumption per kg agricultural production
+	~	m*m*m/year
+	~		|
+
+Evapotranspiration=
+	Average evapotranspiration*Effective irrigated land
+	~	m*m*m/year
+	~		|
+
+Efficiency surface=
+	Efficiency score surface/Sum efficiency*Ini water demand per irrigated area
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+Sum efficiency =
+	Efficiency score localized*Initial percentage localized+(Efficiency score sprinkler)\
+		*Inital percentage sprinkler+Efficiency score surface*Inital percentage surface
+	~	Dmnl
+	~		|
+
+Sum potential=
+	Potential irrigated land localized irrigated+Potential irrigated land sprinkler irrigated\
+		+Potential irrigated land surface irrigated
+	~	km*km
+	~		|
+
+Potential irrigated land surface irrigated= INTEG (
+	-Change in area surface irrigated,
+		Initial area surface irrigation)
+	~	km*km
+	~		|
+
+Treated municipal wastewater=
+	1.3 * 10^9
+	~	m*m*m/year
+	~		|
+
+Irrigated water volume= INTEG (
+	Water use for irrigation-Irrigated water loss-Recovered irrigation water,
+		Ini irrigated water volume)
+	~	m*m*m
+	~		|
+
+Water supply for irrigation= INTEG (
+	Water allocated agriculture-Water use for irrigation,
+		Ini water supply irrigation)
+	~	m*m*m
+	~		|
+
+Desalinated water produced=
+	0.2 * 10^9
+	~	m*m*m/year
+	~		|
+
+Potential irrigated land= INTEG (
+	Increase potential irrigated land-Decrease potential irrigated land,
+		Ini potential irrigated land)
+	~	km * km
+	~		|
+
+Initial area localized irrigation= INITIAL(
+	0.115*38230)
+	~	km*km
+	~		|
+
+Initial area sprinkler irrigation= INITIAL(
+	0.115*38230)
+	~	km*km
+	~		|
+
+Initial area surface irrigation= INITIAL(
+	0.77*38230)
+	~	km*km
+	~		|
+
+Ini water Egypt= INITIAL(
+	77.5 * 10^9)
+	~	m*m*m
+	~		|
+
+Water allocated agriculture=
+	Usable water volume Egypt*Water allocation rate agriculture
+	~	m*m*m/year
+	~		|
+
+Usable water volume Egypt= INTEG (
+	Additional annual water resources+Annual Nile waterflow to Egypt-Water allocated agriculture\
+		-Water allocated other sectors,
+		Ini water Egypt)
+	~	m*m*m
+	~		|
+
+Annual external renewable groundwater=
+	1000 * 10^6
+	~	m*m*m/year
+	~		|
+
+Water allocated other sectors=
+	Usable water volume Egypt * (1-Water allocation rate agriculture)
+	~	m*m*m/year
+	~		|
+
+Maximum annual irrigated land decrease=
+	355
+	~	km*km/year
+	~		|
+
+Maximum annual irrigated land growth =
+	355
+	~	km*km/year
+	~		|
+
+Average agricultural production per irrigated land=
+	1.3488e+06
+	~	kg/(km*km)/year
+	~		|
+
+Agricultural water shortage=
+	MAX(0 , Agricultural production shortage /Average agricultural production per irrigated land\
+		 * Water demand per irrigated area )
+	~	m*m*m/year
+	~		|
+
+Average food demand per capita=
+	465
+	~	kg/year/person
+	~		|
+
+Birth rate Egypt=
+	27.2/1000
+	~	1/year
+	~		|
+
+Death rate Egypt=
+	4.4/1000
+	~	1/year
+	~		|
+
+Agricultural food demand=
+	Population Egypt * Average food demand per capita
+	~	kg/year
+	~		|
+
+Ini potential irrigated land= INITIAL(
+	38230)
+	~	km*km
+	~		|
+
+Ini irrigated water volume= INITIAL(
+	61.1168 *10^9)
+	~	m*m*m
+	~		|
+
+Ini population Egypt= INITIAL(
+	9.44471e+07)
+	~	person
+	~		|
+
+Ini water demand per irrigated area= INITIAL(
+	1.6 *10^6)
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+Ini water supply irrigation= INITIAL(
+	61.35 * 10^9)
+	~	m*m*m
+	~		|
+
+Average evapotranspiration=
+	1.07156e+06
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+Population decrease=
+	Population Egypt * Death rate Egypt
+	~	person/year
+	~		|
+
+Population Egypt= INTEG (
+	Population increase-Population decrease,
+		Ini population Egypt)
+	~	person
+	~		|
+
+Population increase=
+	Population Egypt * Birth rate Egypt
+	~	person/year
+	~		|
+
+Water allocation rate agriculture=
+	0.79
+	~	1/year
+	~		|
+
+Water demand per irrigated area= INTEG (
+	-Water demand reduction,
+		Ini water demand per irrigated area)
+	~	(m*m*m)/(km*km)/year
+	~		|
+
+********************************************************
+	.Control
+********************************************************~
+		Simulation Control Parameters
+	|
+
+FINAL TIME  = 2050
+	~	year
+	~	The final time for the simulation.
+	|
+
+INITIAL TIME  = 2016
+	~	year
+	~	The initial time for the simulation.
+	|
+
+SAVEPER  = 1
+	~	year [0,?]
+	~	The frequency with which output is stored.
+	|
+
+TIME STEP  = 0.03125
+	~	year [0,?]
+	~	The time step for the simulation.
+	|
+
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 1
+$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,75,0
+10,1,Water supply for irrigation,722,-187,53,25,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,2,Usable water volume Egypt,736,200,48,27,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,3,Potential irrigated land,1354,-353,40,20,3,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,4,Water demand per irrigated area,1485,340,64,30,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,5,48,1504,-352,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,6,8,5,4,0,0,22,0,0,0,-1--1--1,,1|(1472,-352)|
+1,7,8,3,100,0,0,22,0,0,0,-1--1--1,,1|(1416,-352)|
+11,8,48,1444,-352,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,9,Decrease potential irrigated land,1444,-321,42,23,40,131,0,0,-1,0,0,0,0,0,0,0,0,0
+1,10,11,2,4,0,0,22,0,0,0,-1--1--1,,1|(667,201)|
+11,11,1036,641,201,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,12,Annual Nile waterflow to Egypt,641,231,45,22,40,131,0,0,-1,0,0,0,0,0,0,0,0,0
+1,13,15,1,4,0,0,22,0,0,0,-1--1--1,,1|(708,-113)|
+1,14,15,2,100,0,0,22,0,0,0,-1--1--1,,1|(708,60)|
+11,15,508,708,-58,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,16,Water allocated agriculture,782,-58,66,19,40,131,0,0,-1,0,0,0,0,0,0,0,0,0
+10,17,Population Egypt,1506,-785,40,20,3,3,0,0,0,0,0,0,0,0,0,0,0,0
+12,18,48,1647,-785,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,19,21,18,4,0,0,22,0,0,0,-1--1--1,,1|(1617,-785)|
+1,20,21,17,100,0,0,22,0,0,0,-1--1--1,,1|(1565,-785)|
+11,21,48,1591,-785,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,22,Population decrease,1591,-758,34,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,23,48,1364,-786,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,24,26,17,4,0,0,22,0,0,0,-1--1--1,,1|(1446,-786)|
+1,25,26,23,100,0,0,22,0,0,0,-1--1--1,,1|(1394,-786)|
+11,26,48,1420,-786,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,27,Population increase,1420,-759,34,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,28,48,1683,341,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,29,31,28,4,0,0,22,0,0,0,-1--1--1,,1|(1645,341)|
+1,30,31,4,100,0,0,22,0,0,0,-1--1--1,,1|(1577,341)|
+11,31,48,1611,341,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,32,Water demand reduction,1611,368,48,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,33,New water demand per irrigated area,1612,435,44,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,34,33,32,0,0,0,0,2,128,0,-1--1--1,|12||0-0-0,1|(1611,408)|
+10,35,Agricultural production,1576,-372,37,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,36,Agricultural production shortage,1385,-486,64,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,37,Agricultural water shortage,1878,-468,57,19,8,3,0,2,0,0,0,0,-1--1--1,0-0-0,|12||255-0-0,0,0,0,0,0,0
+1,38,35,36,1,0,0,0,0,128,0,-1--1--1,,1|(1533,-484)|
+1,39,36,37,1,0,0,0,0,128,0,-1--1--1,,1|(1645,-491)|
+10,40,Average agricultural production per irrigated land,1674,-424,77,27,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,41,40,35,0,0,0,0,0,128,0,-1--1--1,,1|(1623,-396)|
+10,42,Irrigated water volume,945,-188,51,24,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,43,45,42,4,0,0,22,0,0,0,-1--1--1,,1|(867,-188)|
+1,44,45,1,100,0,0,22,0,0,0,-1--1--1,,1|(801,-188)|
+11,45,2070,834,-188,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,46,Water use for irrigation,834,-161,44,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+12,47,48,1112,-187,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,48,50,47,4,0,0,22,0,0,0,-1--1--1,,1|(1078,-187)|
+1,49,50,42,100,0,0,22,0,0,0,-1--1--1,,1|(1019,-187)|
+11,50,48,1049,-187,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,51,Irrigated water loss,1049,-160,54,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,52,4,46,1,0,0,0,0,128,0,-1--1--1,,1|(979,160)|
+10,53,Average evapotranspiration,1077,-269,72,15,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,54,Ini water demand per irrigated area,1488,407,68,19,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,55,54,4,0,0,0,0,0,64,1,-1--1--1,,1|(1487,385)|
+10,56,Ini potential irrigated land,1370,-419,47,21,8,131,0,0,-1,0,0,0,0,0,0,0,0,0
+1,57,56,3,0,0,0,0,0,64,1,-1--1--1,,1|(1363,-392)|
+10,58,Ini water supply irrigation,723,-245,51,19,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,59,58,1,0,0,0,0,0,64,1,-1--1--1,,1|(722,-225)|
+10,60,Ini irrigated water volume,948,-247,56,19,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,61,60,42,0,0,0,0,0,64,1,-1--1--1,,1|(947,-226)|
+1,62,40,37,1,0,0,0,0,128,0,-1--1--1,,1|(1762,-451)|
+1,63,4,37,1,0,0,0,0,128,0,-1--1--1,,1|(1680,-63)|
+10,64,Agricultural food demand,1520,-621,51,26,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+1,65,17,64,1,0,0,0,0,128,0,-1--1--1,,1|(1522,-656)|
+10,66,Average food demand per capita,1240,-703,59,19,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,67,66,64,0,0,0,0,0,64,0,-1--1--1,,1|(1377,-662)|
+10,68,Agricultural import,1892,-630,58,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,69,Ini population Egypt,1506,-746,44,19,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,70,69,17,0,0,0,0,0,64,1,-1--1--1,,1|(1506,-765)|
+10,71,Birth rate Egypt,1352,-822,50,11,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,72,71,27,0,0,0,0,0,64,0,-1--1--1,,1|(1375,-799)|
+1,73,17,27,1,0,0,0,0,64,0,-1--1--1,,1|(1444,-828)|
+10,74,Death rate Egypt,1622,-834,53,11,8,131,0,0,-1,0,0,0,0,0,0,0,0,0
+1,75,74,22,0,0,0,0,0,64,0,-1--1--1,,1|(1610,-806)|
+1,76,17,22,0,0,0,0,0,64,0,-1--1--1,,1|(1545,-773)|
+1,77,3,9,1,0,0,0,0,64,0,-1--1--1,,1|(1431,-387)|
+10,78,Water allocation rate agriculture,864,128,67,19,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,79,48,935,197,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,80,82,79,4,0,0,22,0,0,0,-1--1--1,,1|(892,197)|
+1,81,82,2,100,0,0,22,0,0,0,-1--1--1,,1|(816,197)|
+11,82,48,854,197,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,83,Water allocated other sectors,854,224,66,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,84,Maximum annual irrigated land decrease,1487,-214,54,21,8,131,0,0,-1,0,0,0,0,0,0,0,0,0
+1,85,84,9,0,0,0,0,0,64,0,-1--1--1,,1|(1468,-260)|
+10,86,Maximum annual irrigated land growth,1106,-414,58,19,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,87,Annual internal renewable ground and surface water,1099,395,82,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,88,Ini water Egypt,677,153,46,19,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,89,88,2,0,0,0,0,0,64,1,-1--1--1,,1|(694,169)|
+12,90,48,732,302,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,91,93,2,4,0,0,22,0,0,0,-1--1--1,,1|(732,240)|
+1,92,93,90,100,0,0,22,0,0,0,-1--1--1,,1|(732,280)|
+11,93,48,732,260,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,94,Additional annual water resources,795,260,55,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,95,Annual external renewable groundwater,945,432,75,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,96,95,94,0,0,0,0,0,128,0,-1--1--1,,1|(874,351)|
+1,97,87,94,1,0,0,0,0,128,0,-1--1--1,,1|(920,371)|
+12,98,48,943,-53,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,99,101,98,4,0,0,22,0,0,0,-1--1--1,,1|(943,-84)|
+1,100,101,42,100,0,0,22,0,0,0,-1--1--1,,1|(943,-141)|
+11,101,48,943,-113,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,102,Recovered irrigation water,1003,-113,52,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,103,102,87,1,0,0,0,0,128,0,-1--1--1,,1|(1193,149)|
+1,104,2,16,1,0,0,0,0,128,0,-1--1--1,,1|(781,134)|
+1,105,2,82,1,0,0,0,0,128,0,-1--1--1,,1|(808,164)|
+1,106,78,16,0,0,0,0,0,128,0,-1--1--1,,1|(825,42)|
+1,107,78,83,0,0,0,0,0,64,0,-1--1--1,,1|(859,169)|
+10,108,Initial area surface irrigation,1565,609,53,19,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,109,Initial area sprinkler irrigation,1694,603,48,23,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,110,Initial area localized irrigation,1839,610,41,19,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,111,48,1213,-352,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,112,114,3,4,0,0,22,0,0,0,-1--1--1,,1|(1294,-352)|
+1,113,114,111,100,0,0,22,0,0,0,-1--1--1,,1|(1242,-352)|
+11,114,48,1268,-352,6,8,34,3,0,0,1,0,0,0,0,0,0,0,0,0
+10,115,Increase potential irrigated land,1268,-325,56,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,116,36,115,1,0,0,0,0,64,0,-1--1--1,,1|(1285,-431)|
+1,117,86,115,1,0,0,0,0,64,0,-1--1--1,,1|(1165,-365)|
+1,118,3,115,1,0,0,0,0,64,0,-1--1--1,,1|(1295,-392)|
+10,119,Desalinated water produced,999,282,57,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,120,Treated municipal wastewater,1004,235,57,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,121,Direct use of agricultural drainage,1001,333,64,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,122,120,94,0,0,0,0,0,128,0,-1--1--1,,1|(905,246)|
+1,123,119,94,0,0,0,0,0,128,0,-1--1--1,,1|(902,271)|
+1,124,121,94,0,0,0,0,0,128,0,-1--1--1,,1|(904,298)|
+10,125,Additional annual non renewable water resources,811,387,85,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,126,125,94,0,0,0,0,0,128,0,-1--1--1,,1|(803,330)|
+10,127,Water consumption from agricultural production,922,-387,79,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,128,Average water consumption per kg agricultural production,734,-428,77,28,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,129,128,127,0,0,0,0,0,128,0,-1--1--1,,1|(820,-409)|
+1,130,35,127,1,0,0,0,0,128,0,-1--1--1,,1|(1277,-466)|
+1,131,4,32,1,0,0,0,0,128,0,-1--1--1,,1|(1593,283)|
+1,132,102,121,1,0,0,0,0,128,0,-1--1--1,,1|(1163,166)|
+1,133,46,102,0,0,0,0,0,128,0,-1--1--1,,1|(907,-140)|
+1,134,51,102,0,0,0,0,0,128,0,-1--1--1,,1|(1031,-141)|
+10,135,Minimum water demand per irrigated area,1805,359,66,28,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,136,135,32,0,0,0,0,0,128,0,-1--1--1,,1|(1705,363)|
+10,137,Direct use rate,1136,331,46,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,138,137,87,0,0,0,0,0,128,0,-1--1--1,,1|(1123,353)|
+1,139,137,121,0,0,0,0,0,128,0,-1--1--1,,1|(1084,331)|
+1,140,127,51,0,0,0,0,0,128,0,-1--1--1,,1|(981,-279)|
+12,141,0,238,-312,228,119,3,131,17,3,-1,0,0,0,255-0-0,0-0-0,|12||255-0-0,0,0,0,0,0,0
+12,142,0,41,-404,20,11,8,7,1,0,-1,0,0,0,0,0,0,0,0,0
+KPI's
+12,143,0,101,434,40,20,8,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,144,Percentage recovered,1134,-112,36,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,145,46,144,0,0,0,0,0,128,0,-1--1--1,,1|(981,-136)|
+1,146,102,144,0,0,0,0,0,128,0,-1--1--1,,1|(1069,-112)|
+10,147,Percentage recovered,363,-342,41,19,8,2,17,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,148,Agricultural water shortage,80,-344,61,19,8,2,17,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,149,Evapotranspiration,1099,-225,59,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,150,53,149,0,0,0,0,0,128,0,-1--1--1,,1|(1085,-251)|
+1,151,149,50,0,0,0,0,0,128,0,-1--1--1,,1|(1074,-206)|
+10,152,Efficiency score surface,2234,629,45,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,153,Efficiency score sprinkler,2233,580,45,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,154,Efficiency score localized,2237,520,45,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,155,Sum efficiency,2131,446,59,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,156,154,155,0,0,0,0,0,128,0,-1--1--1,,1|(2183,482)|
+1,157,153,155,0,0,0,0,0,128,0,-1--1--1,,1|(2183,514)|
+1,158,152,155,0,0,0,0,0,128,0,-1--1--1,,1|(2183,539)|
+10,159,Efficiency sprinkler,2037,565,59,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,160,Efficiency localized,2044,507,55,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,161,154,160,0,0,0,0,0,128,0,-1--1--1,,1|(2152,514)|
+1,162,155,160,0,0,0,0,0,128,0,-1--1--1,,1|(2099,468)|
+1,163,155,159,0,0,0,0,0,128,0,-1--1--1,,1|(2091,496)|
+1,164,153,159,0,0,0,0,0,128,0,-1--1--1,,1|(2148,573)|
+10,165,Efficiency surface,2036,630,55,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,166,152,165,0,0,0,0,0,128,0,-1--1--1,,1|(2147,629)|
+1,167,155,165,0,0,0,0,0,128,0,-1--1--1,,1|(2088,527)|
+10,168,Potential irrigated land surface irrigated,1452,659,46,25,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,169,48,1453,771,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,170,172,169,4,0,0,22,0,0,0,-1--1--1,,1|(1453,746)|
+1,171,172,168,100,0,0,22,0,0,0,-1--1--1,,1|(1453,700)|
+11,172,48,1453,723,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,173,Change in area surface irrigated,1518,723,57,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,174,Potential irrigated land sprinkler irrigated,1632,657,45,25,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,175,48,1634,777,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,176,178,175,4,0,0,22,0,0,0,-1--1--1,,1|(1634,749)|
+1,177,178,174,100,0,0,22,0,0,0,-1--1--1,,1|(1634,699)|
+11,178,48,1634,723,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,179,Change in area sprinkler irrigated,1698,723,56,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+10,180,Potential irrigated land localized irrigated,1802,657,49,25,3,131,0,0,0,0,0,0,0,0,0,0,0,0
+12,181,48,1805,772,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,182,184,181,4,0,0,22,0,0,0,-1--1--1,,1|(1805,744)|
+1,183,184,180,100,0,0,22,0,0,0,-1--1--1,,1|(1805,697)|
+11,184,48,1805,718,8,6,33,3,0,0,4,0,0,0,0,0,0,0,0,0
+10,185,Change in area localized irrigated,1869,718,56,19,40,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,186,108,168,0,0,0,0,0,128,1,-1--1--1,,1|(1516,630)|
+1,187,109,174,0,0,0,0,0,128,1,-1--1--1,,1|(1669,624)|
+1,188,110,180,0,0,0,0,0,128,1,-1--1--1,,1|(1828,626)|
+10,189,Decrease potential irrigated land,1414,918,64,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,190,Increase potential irrigated land,1894,920,61,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,191,189,173,0,0,0,0,0,128,0,-1--1--1,,1|(1462,826)|
+1,192,190,179,0,0,0,0,0,128,0,-1--1--1,,1|(1800,826)|
+1,193,190,185,0,0,0,0,0,128,0,-1--1--1,,1|(1882,825)|
+1,194,160,33,0,0,0,0,0,128,0,-1--1--1,,1|(1829,471)|
+1,195,159,33,0,0,0,0,0,128,0,-1--1--1,,1|(1823,499)|
+1,196,165,33,0,0,0,0,0,128,0,-1--1--1,,1|(1830,535)|
+10,197,Sum potential,1377,589,43,11,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,198,168,197,0,0,0,0,0,128,0,-1--1--1,,1|(1412,621)|
+1,199,174,197,0,0,0,0,0,128,0,-1--1--1,,1|(1509,624)|
+1,200,180,197,0,0,0,0,0,128,0,-1--1--1,,1|(1593,623)|
+10,201,Rel surface irrigated,1519,529,36,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,202,Rel sprinkler irrigated,1624,526,41,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,203,Rel localized irrigated,1731,532,41,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,204,197,201,0,0,0,0,0,128,0,-1--1--1,,1|(1436,563)|
+1,205,197,202,0,0,0,0,0,128,0,-1--1--1,,1|(1494,559)|
+1,206,197,203,0,0,0,0,0,128,0,-1--1--1,,1|(1548,561)|
+1,207,180,203,0,0,0,0,0,128,0,-1--1--1,,1|(1768,597)|
+1,208,174,202,0,0,0,0,0,128,0,-1--1--1,,1|(1628,595)|
+1,209,168,201,0,0,0,0,0,128,0,-1--1--1,,1|(1483,597)|
+1,210,201,33,0,0,0,0,0,128,0,-1--1--1,,1|(1560,486)|
+1,211,202,33,0,0,0,0,0,128,0,-1--1--1,,1|(1619,487)|
+1,212,203,33,0,0,0,0,0,128,0,-1--1--1,,1|(1676,487)|
+10,213,Initial percentage localized,2239,389,54,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,214,Inital percentage sprinkler,2236,320,53,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,215,Inital percentage surface,2242,261,53,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,216,215,155,0,0,0,0,0,128,0,-1--1--1,,1|(2187,351)|
+1,217,213,155,0,0,0,0,0,128,0,-1--1--1,,1|(2183,418)|
+1,218,214,155,0,0,0,0,0,128,0,-1--1--1,,1|(2185,381)|
+10,219,Ini water demand per irrigated area,1950,463,73,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,220,219,160,0,0,0,0,0,128,0,-1--1--1,,1|(1990,482)|
+1,221,219,159,0,0,0,0,0,128,0,-1--1--1,,1|(1988,508)|
+1,222,219,165,0,0,0,0,0,128,0,-1--1--1,,1|(1989,540)|
+10,223,Effective irrigated land,1319,-154,56,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,224,223,115,0,0,0,0,0,128,0,-1--1--1,,1|(1295,-232)|
+1,225,3,223,0,0,0,0,0,128,0,-1--1--1,,1|(1337,-259)|
+1,226,223,9,0,0,0,0,0,128,0,-1--1--1,,1|(1375,-229)|
+1,227,4,223,1,0,0,0,0,128,0,-1--1--1,,1|(1560,208)|
+1,228,223,149,0,0,0,0,0,128,0,-1--1--1,,1|(1205,-190)|
+1,229,223,46,1,0,0,0,0,128,0,-1--1--1,,1|(1087,11)|
+1,230,223,35,1,0,0,0,0,128,0,-1--1--1,,1|(1451,-254)|
+10,231,TIME STEP,1725,419,50,11,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,232,231,32,0,0,0,0,0,64,0,-1--1--1,,1|(1683,400)|
+10,233,"Policy switch 1: water demand reduction",1665,237,74,35,8,131,0,2,0,0,0,0,0-0-0,0-0-0,|12||255-0-255,0,0,0,0,0,0
+1,234,233,32,0,0,0,0,0,128,0,-1--1--1,,1|(1637,304)|
+10,235,Irrigated water loss,1949,294,52,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,236,Effective irrigated land,1948,354,46,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,237,236,135,0,0,0,0,0,128,0,-1--1--1,,1|(1893,355)|
+1,238,235,135,0,0,0,0,0,128,0,-1--1--1,,1|(1893,319)|
+1,239,16,223,1,0,0,0,0,128,0,-1--1--1,,1|(1079,-42)|
+10,240,Water use for irrigation,89,-221,49,19,8,2,17,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,241,Effective irrigated land,79,-281,46,19,8,2,17,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,242,Potential irrigated land,207,-274,46,19,8,2,17,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,243,Water demand per irrigated area,348,-268,65,19,8,2,17,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+12,244,0,649,287,591,271,3,131,1,0,-1,0,0,0,0,0,0,0,0,0
+12,245,0,135,43,65,19,8,7,1,0,-1,0,0,0,0,0,0,0,0,0
+Sub model 1: Water supply Egypt
+12,246,0,1356,-462,868,457,3,131,17,0,-1,0,0,0,0,0,0,0,0,0
+12,247,0,572,-872,69,28,8,7,1,0,-1,0,0,0,0,0,0,0,0,0
+Sub model 2: Agricultural water use Egypt
+12,248,0,1805,639,553,486,3,131,1,0,-1,0,0,0,0,0,0,0,0,0
+12,249,0,1340,194,60,19,8,7,1,0,-1,0,0,0,0,0,0,0,0,0
+Sub model 3: Irrigation efficiency
+10,250,Percentage of new land surface irrigated,1346,762,74,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,251,Percentage of decreased land surface irrigated,1351,834,70,29,8,131,0,0,0,0,0,0,0,0,0,0,0,0
+10,252,Percentage of new land sprinkler irrigated,1573,904,74,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,253,Percentage of decreased land sprinkler irrigated,1731,904,79,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,254,Percentage of new land localized irrigated,2052,763,74,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,255,Percentage of decreased land localized irrigated,2059,819,79,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,256,189,179,0,0,0,0,0,128,0,-1--1--1,,1|(1549,824)|
+1,257,189,185,0,0,0,0,0,128,0,-1--1--1,,1|(1634,820)|
+1,258,190,173,0,0,0,0,0,128,0,-1--1--1,,1|(1712,824)|
+1,259,250,173,0,0,0,0,0,128,0,-1--1--1,,1|(1433,742)|
+1,260,251,173,0,0,0,0,0,128,0,-1--1--1,,1|(1435,777)|
+1,261,252,179,0,0,0,0,0,128,0,-1--1--1,,1|(1631,819)|
+1,262,253,179,0,0,0,0,0,128,0,-1--1--1,,1|(1715,820)|
+1,263,254,185,0,0,0,0,0,128,0,-1--1--1,,1|(1958,739)|
+1,264,255,185,0,0,0,0,0,128,0,-1--1--1,,1|(1970,771)|
+10,265,Sum percentage new land,1592,1032,52,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,266,Sum percentage decreased land,1726,1034,52,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,267,Percentage of new land localized irrigated,1414,984,75,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,268,Percentage of new land sprinkler irrigated,1416,1034,75,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,269,Percentage of new land surface irrigated,1419,1093,71,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,270,Percentage of decreased land localized irrigated,1885,982,83,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,271,Percentage of decreased land sprinkler irrigated,1881,1029,83,19,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,272,Percentage of decreased land surface irrigated,1884,1079,73,28,8,2,0,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+1,273,267,265,0,0,0,0,0,128,0,-1--1--1,,1|(1505,1008)|
+1,274,268,265,0,0,0,0,0,128,0,-1--1--1,,1|(1508,1033)|
+1,275,269,265,0,0,0,0,0,128,0,-1--1--1,,1|(1499,1064)|
+1,276,270,266,0,0,0,0,0,128,0,-1--1--1,,1|(1809,1006)|
+1,277,271,266,0,0,0,0,0,128,0,-1--1--1,,1|(1794,1031)|
+1,278,272,266,0,0,0,0,0,128,0,-1--1--1,,1|(1801,1055)|
+10,279,"External switch 1: dry climate",453,262,56,19,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||255-0-255,0,0,0,0,0,0
+10,280,"External switch 2: wet climate",452,337,56,19,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||255-0-255,0,0,0,0,0,0
+10,281,"External switch 3: low international food prices",2101,-643,76,19,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||255-0-255,0,0,0,0,0,0
+10,282,"External switch 4: high international food prices",2099,-598,76,19,8,3,0,2,0,0,0,0,0-0-0,0-0-0,|12||255-0-255,0,0,0,0,0,0
+10,283,Normal annual Nile flow to Egypt,499,138,62,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,284,283,12,0,0,0,0,0,128,0,-1--1--1,,1|(561,179)|
+1,285,281,68,0,0,0,0,0,128,0,-1--1--1,,1|(1994,-636)|
+1,286,282,68,0,0,0,0,0,128,0,-1--1--1,,1|(1993,-613)|
+10,287,Normal import rate Egypt,1792,-719,47,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,288,Effect low prices on import rate,1935,-727,64,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,289,Effect high prices on import rate,2087,-724,65,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,290,64,68,0,0,0,0,0,128,0,-1--1--1,,1|(1695,-624)|
+1,291,287,68,0,0,0,0,0,128,0,-1--1--1,,1|(1840,-675)|
+1,292,288,68,0,0,0,0,0,128,0,-1--1--1,,1|(1914,-680)|
+1,293,289,68,0,0,0,0,0,128,0,-1--1--1,,1|(1987,-676)|
+12,294,0,237,-109,228,80,3,131,17,3,-1,0,0,0,255-0-255,0-0-0,|12||255-0-255,0,0,0,0,0,0
+12,295,0,58,-159,29,11,8,7,1,0,-1,0,0,0,0,0,0,0,0,0
+Switches
+10,296,"Policy switch 1: water demand reduction",97,-121,81,29,8,130,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,297,"External switch 1: dry climate",249,-121,61,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,298,"External switch 2: wet climate",392,-119,61,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,299,"External switch 3: low international food prices",135,-63,81,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,300,"External switch 4: high international food prices",337,-57,81,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+12,301,48,567,201,10,8,0,3,0,0,-1,0,0,0,0,0,0,0,0,0
+1,302,11,301,100,0,0,22,0,0,0,-1--1--1,,1|(606,201)|
+1,303,279,12,0,0,0,0,0,128,0,-1--1--1,,1|(545,246)|
+1,304,280,12,0,0,0,0,0,128,0,-1--1--1,,1|(536,288)|
+10,305,Change Nile flow Egypt dry climate,577,374,58,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+10,306,Change Nile flow Egypt wet climate,577,437,57,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,307,305,12,0,0,0,0,0,128,0,-1--1--1,,1|(605,310)|
+1,308,306,12,1,0,0,0,0,128,0,-1--1--1,,1|(664,349)|
+10,309,TIME STEP,834,-123,50,11,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+12,310,0,236,-592,227,153,3,131,1,0,-1,0,0,0,0,0,0,0,0,0
+12,311,0,70,-712,54,11,8,7,1,0,-1,0,0,0,0,0,0,0,0,0
+Other user inputs
+10,312,Effect low prices on import rate,240,-655,68,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,313,Effect high prices on import rate,76,-658,69,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,314,Change Nile flow Egypt dry climate,391,-652,60,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,315,Change Nile flow Egypt wet climate,75,-591,61,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,316,Percentage of new land surface irrigated,231,-591,71,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,317,Percentage of decreased land surface irrigated,383,-592,73,28,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,318,Percentage of new land sprinkler irrigated,137,-523,75,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,319,Percentage of decreased land sprinkler irrigated,324,-525,83,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,320,Percentage of new land localized irrigated,129,-474,75,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,321,Percentage of decreased land localized irrigated,325,-471,83,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+10,322,Agricultural water shortage with import,1895,-549,75,19,8,3,0,0,0,0,0,0,0,0,0,0,0,0
+1,323,68,322,0,0,0,0,0,128,0,-1--1--1,,1|(1892,-600)|
+1,324,36,322,0,0,0,0,0,128,0,-1--1--1,,1|(1627,-515)|
+1,325,40,322,1,0,0,0,0,128,0,-1--1--1,,1|(1764,-499)|
+1,326,64,36,0,0,0,0,0,128,0,-1--1--1,,1|(1453,-554)|
+1,327,4,322,1,0,0,0,0,128,0,-1--1--1,,1|(1566,-141)|
+10,328,Agricultural water shortage with import,227,-343,70,19,8,2,1,3,-1,0,0,0,128-128-128,0-0-0,|12||128-128-128,0,0,0,0,0,0
+\\\---/// Sketch information - do not modify anything except names
+V300  Do not put anything below this section - it will be ignored
+*View 2
+$192-192-192,0,Times New Roman|12||0-0-0|0-0-0|0-0-255|-1--1--1|-1--1--1|96,96,80,0
+///---\\\
+:L<%^E!@
+1:C:\Users\flori\Primary\Documenten\TB\TB-Files\Jaar 3\BEP\Vensim\Model\Base Case.vdfx
+1:C:\Users\flori\Primary\Documenten\TB\TB-Files\Jaar 3\BEP\Vensim\Model\Policy 2 Realistic.vdfx
+1:C:\Users\flori\Primary\Documenten\TB\TB-Files\Jaar 3\BEP\Vensim\Model\Policy 4 Very efficient.vdfx
+1:C:\Users\flori\Primary\Documenten\TB\TB-Files\Jaar 3\BEP\Vensim\Model\Policy 5 Extreme efficient.vdfx
+9:Policy 4 Very efficient
+22:month,Month
+22:year,Year
+18:Model14Year.vsc
+20:Model14Year.lst
+15:0,0,0,1,0,0
+19:75,0
+27:0,
+34:0,
+4:Time
+5:Usable water volume Egypt
+35:Date
+36:YYYY-MM-DD
+37:2016
+38:1
+39:1
+40:0
+41:0
+42:1
+72:0
+73:0
+76:0
+77:0
+78:0
+79:0
+80:0
+81:0
+24:2016
+25:2050
+26:2050
+75:
+43:
