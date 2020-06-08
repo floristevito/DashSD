@@ -3,7 +3,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-model = pysd.read_vensim('Model16Final.mdl')
+model = pysd.read_vensim("AdditionalSources/Model16Final.mdl")
 
 def set_baseCase():
     params = {
@@ -12,16 +12,6 @@ def set_baseCase():
         "external_switch_2_wet_climate" : 0,
         "external_switch_3_low_international_food_prices" : 0,
         "external_switch_4_high_international_food_prices" : 0,
-        "effect_low_prices_on_import_rate" : 0.1,
-        "effect_high_prices_on_import_rate" : -0.4,
-        "change_nile_flow_egypt_dry_climate" :  -0.5,
-        "change_nile_flow_egypt_wet_climate" : 0.25,
-        "percentage_of_new_land_surface_irrigated" : 0,
-        "percentage_of_decreased_land_surface_irrigated" : 1,
-        "percentage_of_new_land_sprinkler_irrigated" : 0.8,
-        "percentage_of_decreased_land_sprinkler_irrigated" : 0,
-        "percentage_of_new_land_localized_irrigated" : 0.2,
-        "percentage_of_decreased_land_localized_irrigated": 0
     }
     output = model.run(params=params)
     return output
@@ -45,7 +35,7 @@ sdApp.layout = html.Div(children=[
     html.Div(className="row", children=[
         html.Div(className= "four columns", children=[
             html.H2("Input parameters"),
-            html.P("Input parameters that can be changed to experiment with modelling results. The model will be simulated in real time and might take a small amount of time to fully load. Note that when an efficiency stimulating policy is enabled, the sliders should also be given an appropriate value. Otherwise, the model will run but produce inaccurate results. Press the run simulation button when the parameters are sett to preferences."),
+            html.P("Input parameters that can be changed to experiment with modelling results. The model will be simulated in real time and might take a small amount of time to fully load. Note that when an efficiency stimulating policy is enabled, the sliders should also be given an appropriate value. Otherwise, the model will run but inaccurate results will be produced. Press the run simulation button when the parameters are set to preferences."),
             html.Button("Run simulation", id="Run", style={"float":"right"}),
             html.H3("Policy and climate scenarios"),
             html.Label("Efficient irrigation policy"),
@@ -266,7 +256,7 @@ sdApp.layout = html.Div(children=[
 def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood, valueNewSurface, valueNewSprinkler, valueNewLocalized, valueDecrSurface, valueDecrSprinkler, valueDecrLocalized):
     switchP1= 1 if  valuePolicy == "Efficiency" else 0
     switchE1 = 1 if valueClimate == "Dry" else 0 
-    switchE2 = 1 if valueClimate == "wet" else 0 
+    switchE2 = 1 if valueClimate == "Wet" else 0 
     switchE3 = 1 if valueFood == "Low" else 0 
     switchE4 = 1 if valueFood == "High" else 0 
     params = {
