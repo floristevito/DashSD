@@ -12,6 +12,8 @@ Python version 3.7.7 <br>
 # Usage
 A live version of the interactive dashboard <a href="http://dashsd.herokuapp.com/">can be found here</a>. This version simulates the SD model in real time, making it possible for the user to select any combination of input variables. 
 
+![Alt text](additionalSources/DashSDScreenshot.jpg?raw=true "Live version")
+
 # Source
 All the needed python code is included in the "app.py" file in the root of this repository. An extensive list of all requirements is included in the "requirements.txt" file. 
 Additional sources are include in this repository in the folder named “AdditionalSources”. This folder includes a python Jupyter Notebook file (.ipynb), with all the code of the main python app with some additional data exploring and a more stepwise approach. This file might help when exploring the code. The latest version of the constructed SD model and a copy of the thesis is also included in this folder. 
