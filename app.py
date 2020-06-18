@@ -3,7 +3,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-model = pysd.read_vensim(r"C:\Users\flori\Primary\Documenten\TB\DashSD\AdditionalSources\Model16Final.mdl")
+model = pysd.read_vensim("AdditionalSources/Model16Final.mdl")
 
 def set_baseCase():
     params = {
@@ -23,14 +23,16 @@ sdApp = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = sdApp.server
 
 sdApp.layout = html.Div(children=[
-    html.Div(className="row", style={"background-color" : "#66a3ff"}, children=[
+    html.Div(className="row", children=[
         html.Div(className= "twelve columns", children=[
-            html.H1("Irrigation Efficiency Egypt"),
+            html.H1("Efficiency irrigation Egypt: Interactive SD modelling dashboard"),
             html.P("This project uses PySD and Dash to simulate a System Dynamics model build in Vensim and visualize the results on an interactive dashboard. The SD model is built in the context of a bachelor final project on effects of irrigation efficiency improvements in Egypt. This research is performed in the context of the Technology, Policy and Management bachelor thesis program of the Technical University Delft. The goal of this research is to inform local policymakers in Egypt best about possible effects of improved irrigation efficiency. In consideration of this goal, an interactive dashboard using Python is built to enable policymakers to simulate the constructed model in this research without any additional knowledge requirements about simulations and visualizations. Furthermore, the dashboard enables policymakers to test a wide range of variations in model input combinations, since the model is simulated in the background (PySD) in real time."),
             html.P([html.Br(), "For all dependencies and additional information see ", html.A("Github", href="https://github.com/floristevito/DashSD", style={"color" : "black"})]),
-        ]),
+        ],
+                style={"background-color" : "#66a3ff"}
+                ),
     ]),
-    html.Div(className="row", style={"background-color" : "#b3d1ff", "border-top" : "2px solid"}, children=[
+    html.Div(className="row", children=[
         html.Div(className= "four columns", children=[
             html.H2("Input parameters"),
             html.P("Input parameters that can be changed to experiment with modelling results. The model will be simulated in real time and might take a small amount of time to fully load. Note that when an efficiency stimulating policy is enabled, the sliders should also be given an appropriate value. Otherwise, the model will run but inaccurate results will be produced. Press the run simulation button when the parameters are set to preferences."),
@@ -189,11 +191,13 @@ sdApp.layout = html.Div(children=[
                     100: {"label" : "100%"},
                 },
                 value = 0,
-            )]),
-        html.Div(className= "eight columns", style={"border-left" : "1px solid"}, children=[
+            ),
+            ],
+            style={"background-color" : "#b3d1ff"}),
+        html.Div(className= "eight columns", children=[
             dcc.Graph(
                 id="Agricultural water shortage Egypt",
-                style={"float":"left", "width": "99%"}
+                style={"float":"left", "width": "49.5%"}
             ),
             dcc.Graph(
                 id="Agricultural water shortage Egypt with import",
@@ -217,10 +221,11 @@ sdApp.layout = html.Div(children=[
             ),
             dcc.Graph(
                 id="Water use for irrigation",
-                style={"float":"left", "width": "49.5%"}
+                style={"float":"left", "width": "99%"}
             ),
             dcc.Loading(id="loading", children=html.Div(id="loading-output"), style={"height": "80%"}),
-            ]) 
+            ],
+            style={"background-color" : "#e6f0ff"}) 
         ])
 ])
 
@@ -235,7 +240,7 @@ sdApp.layout = html.Div(children=[
     dash.dependencies.Output('Water demand per irrigated area', 'figure'),
     dash.dependencies.Output('Water use for irrigation', 'figure')], 
     [dash.dependencies.Input("Run", "n_clicks"),
-    dash.dependencies.Input("loading", "children")],
+    dash.dependencies.Input("loading", "value")],
     [dash.dependencies.State('dropdownPolicy', 'value'),
     dash.dependencies.State('dropdownClimate', 'value'),
     dash.dependencies.State('dropdownFood', 'value'),
@@ -280,9 +285,7 @@ def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood,
             "layout" : {
                 "title" : "Agricultural water shortage Egypt",
                 "xaxis" : {"title" : "year"},
-                "yaxis" : {"title" : "cubic meters water per year"},
-                "plot_bgcolor": "rgba(0,0,0,0)",
-                "paper_bgcolor": "rgba(0,0,0,0)"
+                "yaxis" : {"title" : "cubic meters water per year"}
                 }
             }
     figureWaterShortageImport = {
@@ -294,9 +297,7 @@ def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood,
             "layout" : {
                 "title" : "Agricultural water shortage Egypt with import",
                 "xaxis" : {"title" : "year"},
-                "yaxis" : {"title" : "cubic meters water per year"},
-                "plot_bgcolor": "rgba(0,0,0,0)",
-                "paper_bgcolor": "rgba(0,0,0,0)"
+                "yaxis" : {"title" : "cubic meters water per year"}
                 }
             }
     figurePercentageRecovered = {
@@ -308,9 +309,7 @@ def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood,
             "layout" : {
                 "title" : "Percentage of irrigated water volume recovered",
                 "xaxis" : {"title" : "year"},
-                "yaxis" : {"title" : "%"},
-                "plot_bgcolor": "rgba(0,0,0,0)",
-                "paper_bgcolor": "rgba(0,0,0,0)"
+                "yaxis" : {"title" : "%"}
                 }
             }
     figureEffectiveLand = {
@@ -322,9 +321,7 @@ def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood,
             "layout" : {
                 "title" : "Effective irrigated land",
                 "xaxis" : {"title" : "year"},
-                "yaxis" : {"title" : "Square kilometers"},
-                "plot_bgcolor": "rgba(0,0,0,0)",
-                "paper_bgcolor": "rgba(0,0,0,0)"
+                "yaxis" : {"title" : "Square kilometers"}
                 }
             }
     figureAgriculturalProduction = {
@@ -336,9 +333,7 @@ def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood,
             "layout" : {
                 "title" : "Agricultural production",
                 "xaxis" : {"title" : "year"},
-                "yaxis" : {"title" : "Kilograms per year"},
-                "plot_bgcolor": "rgba(0,0,0,0)",
-                "paper_bgcolor": "rgba(0,0,0,0)"
+                "yaxis" : {"title" : "Kilograms per year"}
                 }
             }
     figureWaterDemand = {
@@ -350,9 +345,7 @@ def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood,
             "layout" : {
                 "title" : "Water demand per irrigated area",
                 "xaxis" : {"title" : "year"},
-                "yaxis" : {"title" : "Cubic meter/square kilometer/year"},
-                "plot_bgcolor": "rgba(0,0,0,0)",
-                "paper_bgcolor": "rgba(0,0,0,0)"
+                "yaxis" : {"title" : "Cubic meter/square kilometer/year"}
                 }
             }
     figureWaterUse = {
@@ -364,9 +357,7 @@ def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood,
             "layout" : {
                 "title" : "Water use for irrigation",
                 "xaxis" : {"title" : "year"},
-                "yaxis" : {"title" : "Cubic meter per year"},
-                "plot_bgcolor": "rgba(0,0,0,0)",
-                "paper_bgcolor": "rgba(0,0,0,0)"
+                "yaxis" : {"title" : "Cubic meter per year"}
                 }
             }
     
