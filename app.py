@@ -3,7 +3,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-model = pysd.read_vensim(r"C:\Users\flori\Primary\Documenten\TB\DashSD\AdditionalSources\Model16Final.mdl")
+model = pysd.read_vensim("AdditionalSources/Model16Final.mdl")
 
 def set_baseCase():
     params = {
