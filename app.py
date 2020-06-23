@@ -63,7 +63,7 @@ sdApp.layout = html.Div(children=[
                 value="None" 
             ),
             html.H3("Sliders for policy scenario"),
-            html.P("Important: the sum of both the new and decreased land should always equal 100% for accurate results"),
+            html.P("Important: the sum of both the new and decreased land should always equal 100% for accurate results."),
             html.Label("Percentage of new irrigated land Surface Irrigated"),
             dcc.Slider(
                 id="sliderNewSurface",
@@ -226,6 +226,22 @@ sdApp.layout = html.Div(children=[
 
 #Callbacks
 @sdApp.callback(
+    [dash.dependencies.Output('sliderNewSurface', 'value'),
+    dash.dependencies.Output('sliderNewSprinkler', 'value'),
+    dash.dependencies.Output('sliderNewLocalized', 'value'),
+    dash.dependencies.Output('sliderDecrSurface', 'value'),
+    dash.dependencies.Output('sliderDecrSprinkler', 'value'),
+    dash.dependencies.Output('sliderDecrLocalized', 'value')],
+    [dash.dependencies.Input('dropdownPolicy', 'value')]
+)
+
+def update_sliders(value):
+    if value == "Efficiency":
+        return 0,0,100,100,0,0
+    else:
+        return 0,0,0,0,0,0
+
+@sdApp.callback(
     [dash.dependencies.Output('loading-output', 'children'),
     dash.dependencies.Output('Agricultural water shortage Egypt', 'figure'),
     dash.dependencies.Output('Agricultural water shortage Egypt with import', 'figure'),
@@ -234,8 +250,8 @@ sdApp.layout = html.Div(children=[
     dash.dependencies.Output('Agricultural production', 'figure'),
     dash.dependencies.Output('Water demand per irrigated area', 'figure'),
     dash.dependencies.Output('Water use for irrigation', 'figure')], 
-    [dash.dependencies.Input("Run", "n_clicks"),
-    dash.dependencies.Input("loading", "children")],
+    [dash.dependencies.Input('Run', 'n_clicks'),
+    dash.dependencies.Input('loading', 'children')],
     [dash.dependencies.State('dropdownPolicy', 'value'),
     dash.dependencies.State('dropdownClimate', 'value'),
     dash.dependencies.State('dropdownFood', 'value'),
@@ -247,7 +263,6 @@ sdApp.layout = html.Div(children=[
     dash.dependencies.State('sliderDecrLocalized', 'value')
     ])
      
-
 def update_water_shortage(n_clicks, value, valuePolicy, valueClimate, valueFood, valueNewSurface, valueNewSprinkler, valueNewLocalized, valueDecrSurface, valueDecrSprinkler, valueDecrLocalized):
     switchP1= 1 if  valuePolicy == "Efficiency" else 0
     switchE1 = 1 if valueClimate == "Dry" else 0 
